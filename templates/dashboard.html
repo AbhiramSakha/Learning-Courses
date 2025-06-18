@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Learner Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      position: relative;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background-color: #dc3545;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: #b52a37;
+    }
+
+    .dashboard-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: 30px;
+      padding: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .dashboard-image,
+    .dashboard-image-right {
+      width: 30%;
+      max-width: 350px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .dashboard-image img,
+    .dashboard-image-right img {
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    #playlistLink {
+      display: inline-block;
+      padding: 10px 16px;
+      background-color: #007bff;
+      color: white !important;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    #playlistLink:hover {
+      background-color: #0056b3;
+    }
+
+    li {
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 15px;
+      max-width: 600px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    li a {
+      display: inline-block;
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: bottom;
+      color: #0dcaf0;
+      font-weight: bold;
+      text-decoration: none;
+      margin-left: 10px;
+    }
+
+    li a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-wrapper {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .dashboard-image,
+      .dashboard-image-right {
+        width: 100%;
+      }
+
+      .logout-btn {
+        position: static;
+        display: block;
+        margin: 10px auto;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 🔒 Logout Button -->
+  <a class="logout-btn" href="/logout">Logout</a>
+
+  <!-- 🎯 Top Course Ads Section -->
+  <div class="course-ads">
+    <div class="course-card">
+      <img src="{{ url_for('static', filename='images/python.jpg') }}" alt="Python Course">
+      <p>Python Course</p>
+    </div>
+    <div class="course-card">
+      <img src="{{ url_for('static', filename='images/powerbi.jpg') }}" alt="Power BI Course">
+      <p>Power BI Course</p>
+    </div>
+    <div class="course-card">
+      <img src="{{ url_for('static', filename='images/MERN.jpg') }}" alt="MERN Stack Course">
+      <p>MERN Stack Course</p>
+    </div>
+  </div>
+
+  <!-- 🧠 Main Dashboard -->
+  <div class="dashboard-wrapper">
+
+    <!-- 📸 Left Side Images -->
+    <div class="dashboard-image">
+      <img src="{{ url_for('static', filename='images/web.jpg') }}" alt="Web Image">
+      <img src="{{ url_for('static', filename='images/R.jpg') }}" alt="R Programming Image">
+    </div>
+
+    <!-- 💻 Learner Dashboard -->
+    <div class="container">
+      <h1>Learner Dashboard</h1>
+
+      <form id="courseForm">
+        <input type="text" name="course" id="courseInput" placeholder="Enter Course (e.g., Python)" required>
+        <button type="submit">Find Playlist</button>
+      </form>
+
+      <div id="resultSection" class="hidden">
+        <h3>✅ Playlist found for "<span id="courseName"></span>"</h3>
+        <a id="playlistLink" href="#" target="_blank">▶️ Watch Now</a>
+      </div>
+
+      <h2>All Searched Courses</h2>
+      <ul>
+        {% for l in learners %}
+          <li>{{ l.course }} —
+            <a href="{{ l.link }}" target="_blank">Watch Playlist</a>
+            <a href="/delete/{{ l._id }}">🗑 Delete</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- 📸 Right Side Images -->
+    <div class="dashboard-image-right">
+      <img src="{{ url_for('static', filename='images/anaconda.jpg') }}" alt="Anaconda">
+      <img src="{{ url_for('static', filename='images/vs.jpg') }}" alt="VS Code">
+    </div>
+
+  </div>
+
+  <!-- 🧠 JS Logic -->
+  <script>
+    const form = document.getElementById('courseForm');
+    const result = document.getElementById('resultSection');
+    const courseSpan = document.getElementById('courseName');
+    const linkEl = document.getElementById('playlistLink');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const course = document.getElementById('courseInput').value;
+
+      fetch('/dashboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ course })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.playlist_url) {
+          courseSpan.textContent = course;
+          linkEl.href = data.playlist_url;
+          result.classList.remove('hidden');
+        } else {
+          alert(data.error);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

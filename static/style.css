@@ -1,0 +1,178 @@
+/* Base Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(120deg, rgba(0,0,0,0.85), rgba(0,0,0,0.8)), url('/static/images/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* Main Container */
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    animation: slideIn 1s ease;
+}
+
+/* Headings */
+h1, h2, h3 {
+    color: #0dcaf0;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: fadeInDown 1.2s ease;
+}
+
+/* Forms */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+    animation: fadeInUp 1.4s ease;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    outline: none;
+}
+
+/* Buttons */
+button {
+    padding: 12px;
+    background-color: #0dcaf0;
+    border: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    animation: fadeInUp 1.6s ease;
+}
+
+button:hover {
+    background-color: #0bb4da;
+}
+
+/* Course Ad Section */
+.course-ads {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 30px auto 0;
+    flex-wrap: wrap;
+    animation: zoomIn 1.8s ease;
+}
+
+.course-card {
+    text-align: center;
+}
+
+.course-ads img {
+    width: 250px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    transition: transform 0.4s ease;
+}
+
+.course-ads img:hover {
+    transform: scale(1.05);
+}
+
+/* List Section */
+ul {
+    list-style-type: none;
+    padding: 0;
+    animation: fadeInUp 1.8s ease;
+}
+
+li {
+    margin-bottom: 12px;
+    background: rgba(255,255,255,0.1);
+    padding: 10px;
+    border-radius: 6px;
+}
+
+li a {
+    color: #0dcaf0;
+    margin-left: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+li a:hover {
+    text-decoration: underline;
+}
+
+/* Error Message */
+.error {
+    color: #ff6b6b;
+    text-align: center;
+    animation: shake 0.5s;
+}
+
+/* Register Text */
+.register-text {
+    text-align: center;
+    font-size: 15px;
+    color: #ccc;
+    margin-top: 20px;
+    animation: fadeInUp 1.8s ease;
+}
+
+.register-text a {
+    color: #0dcaf0;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.register-text a:hover {
+    color: #09a3c7;
+    text-decoration: underline;
+}
+
+/* Animations */
+@keyframes slideIn {
+    0% { transform: translateY(50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInDown {
+    0% { transform: translateY(-30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    0% { transform: translateY(30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes zoomIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
