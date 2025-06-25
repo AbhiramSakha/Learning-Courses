@@ -30,8 +30,9 @@ fastapi==0.115.8
 fastapi-cli==0.0.7
 ffmpy==0.5.0
 filelock==3.17.0
-Flask==3.1.0
+Flask==2.3.3
 Flask-Bcrypt==1.0.1
+Flask-PyMongo==2.3.0
 Flask-Login==0.6.3
 Flask-Session==0.8.0
 Flask-SQLAlchemy==3.1.1
@@ -52,6 +53,7 @@ google-cloud-dialogflow==2.40.0
 google-pasta==0.2.0
 googleapis-common-protos==1.69.1
 googlemaps==4.10.0
+gunicorn==22.0.0
 googletrans==4.0.2
 gradio==5.15.0
 gradio_client==1.7.0
@@ -125,6 +127,7 @@ pyarrow==19.0.1
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
 pycparser==2.22
+python-dotenv==1.0.0
 pydantic==2.10.6
 pydantic-extra-types==2.10.3
 pydantic-settings==2.7.1
@@ -143,7 +146,7 @@ PyYAML==6.0.2
 react==4.3.0
 referencing==0.36.2
 regex==2024.11.6
-requests==2.32.3
+requests==2.31.0
 requests-toolbelt==1.0.0
 rich==13.9.4
 rich-toolkit==0.13.2
