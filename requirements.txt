@@ -1,4 +1,4 @@
-﻿absl-py==2.1.0
+absl-py==2.1.0
 aiofiles==23.2.1
 aiohappyeyeballs==2.4.6
 aiohttp==3.11.12
@@ -127,7 +127,6 @@ pyarrow==19.0.1
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
 pycparser==2.22
-python-dotenv>=1.0.0,<2.0.0
 pydantic==2.10.6
 pydantic-extra-types==2.10.3
 pydantic-settings==2.7.1
@@ -173,7 +172,7 @@ sympy==1.13.1
 tenacity==8.5.0
 tensorboard==2.18.0
 tensorboard-data-server==0.7.2
-tensorflow==2.14.0 
+tensorflow==2.14.0
 tensorflow_intel==2.18.0
 tensorflow_keras==0.1
 termcolor==2.5.0
@@ -202,5 +201,3 @@ WTForms==3.2.1
 xgboost==3.0.0
 yarl==1.18.3
 zstandard==0.23.0
-flask
-fpdf
