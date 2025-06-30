@@ -97,6 +97,7 @@ def get_youtube_playlist(course):
         playlist_id = data['items'][0]['id']['playlistId']
         return f"https://www.youtube.com/playlist?list={playlist_id}"
     return None
+app.run(host='0.0.0.0', port=5000)
 
 
 if __name__ == '__main__':
