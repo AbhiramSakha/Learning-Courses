@@ -96,7 +96,6 @@ button:hover {
 /* --- Top Advertising Section (placed at the very top of the page) --- */
 .course-ads-top {
     display: flex;
-    flex-direction: row; /* MODIFIED: Ensure items are in a row */
     justify-content: center; /* Center ads horizontally */
     gap: 25px; /* Space between the ads */
     margin: 30px auto 20px auto; /* Top, horizontal centering, bottom margin */
@@ -185,7 +184,7 @@ button:hover {
 /* Course Ad Section (These are the ads if they appear in a sidebar on the dashboard, not the top ones) */
 .course-ads {
     display: flex;
-    flex-direction: column; /* These ads (if they exist) will still be in a column */
+    flex-direction: column;
     gap: 15px;
     justify-content: center;
     margin: 15px 0 0 0;
@@ -339,7 +338,7 @@ li a:hover {
     }
 
     .course-ads-top {
-        flex-direction: column; /* Changed: Stack top ads vertically on small screens */
+        flex-direction: column; /* Stack top ads vertically on small screens */
         gap: 15px;
     }
     .course-ads-top img {
