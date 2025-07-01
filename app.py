@@ -10,14 +10,10 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-# MongoDB Config
-from flask import Flask
-from flask_pymongo import PyMongo
 
 app = Flask(__name__)
-
-# Use the fixed URI
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
+
 mongo = PyMongo(app)
 
 # Access database (important: replace 'mydatabase' if you named it something else)
