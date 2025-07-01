@@ -9,19 +9,11 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
-
-
-app = Flask(__name__)
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 
 mongo = PyMongo(app)
 
-# Access database (important: replace 'mydatabase' if you named it something else)
-db = mongo.db
-users = db.users
-mongo = PyMongo(app)
-
-# Fix collection naming issue (MongoDB is case-sensitive)
+# ✅ Correct database and collection access
 db = mongo.db
 users = db.users
 learners = db.learners  # Collection to store course searches
@@ -104,8 +96,8 @@ def get_youtube_playlist(course):
         playlist_id = data['items'][0]['id']['playlistId']
         return f"https://www.youtube.com/playlist?list={playlist_id}"
     return None
-app.run(host='0.0.0.0', port=5000)
 
 
+# For local testing or development
 if __name__ == '__main__':
     app.run(debug=True)
