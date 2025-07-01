@@ -14,28 +14,30 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
 # MongoDB Config
-app.config["MONGO_URI"] = os.getenv("MONGO_URI")
+# Get MONGO_URI from environment variables
+mongo_uri = os.getenv("MONGO_URI")
+app.config["MONGO_URI"] = mongo_uri
 
 # Initialize PyMongo
 mongo = PyMongo(app)
 
-# Collections - Access these *after* mongo has been initialized with the app
-# These should be accessed within a request context or after the app has fully set up,
-# or better yet, access them directly through mongo.db.collection_name
-# For global access, it's safer to define them within a function or access them dynamically.
-# However, if you want them as global variables, you need to ensure mongo.db is not None.
+# Initialize db and collections to None initially
+db = None
+users = None
+learners = None
 
-# This block is moved to ensure mongo is initialized before db is accessed
+# Attempt to connect to MongoDB and get collections
+# This block runs when the application starts
 try:
     db = mongo.db
     users = db.users
     learners = db.learners
+    print("MongoDB collections (users, learners) initialized successfully.")
 except Exception as e:
     print(f"Error connecting to MongoDB or accessing collections: {e}")
-    # You might want to handle this more robustly, e.g., by exiting or showing an error page.
-    db = None # Ensure db is None if connection fails
-    users = None
-    learners = None
+    print("Please ensure MONGO_URI is set correctly and MongoDB is accessible.")
+    # If connection fails, db, users, and learners will remain None,
+    # and routes will return a 500 error, indicating database unavailability.
 
 
 @app.route('/')
@@ -45,8 +47,10 @@ def home():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if users is None: # Added check
-        return "Database not available.", 500
+    # Check if the 'users' collection is available (i.e., DB connection was successful)
+    if users is None:
+        return "Database not available. Please check server logs for connection errors.", 500
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -60,8 +64,10 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if users is None: # Added check
-        return "Database not available.", 500
+    # Check if the 'users' collection is available
+    if users is None:
+        return "Database not available. Please check server logs for connection errors.", 500
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -84,9 +90,10 @@ def logout():
 def dashboard():
     if 'username' not in session:
         return redirect('/login')
-    
-    if learners is None: # Added check
-        return "Database not available.", 500
+
+    # Check if the 'learners' collection is available
+    if learners is None:
+        return "Database not available. Please check server logs for connection errors.", 500
 
     if request.method == 'POST':
         course = request.form['course']
@@ -106,25 +113,52 @@ def dashboard():
 def delete_course(id):
     if 'username' not in session:
         return redirect('/login')
-    if learners is None: # Added check
-        return "Database not available.", 500
-    learners.delete_one({'_id': ObjectId(id)})
+
+    # Check if the 'learners' collection is available
+    if learners is None:
+        return "Database not available. Please check server logs for connection errors.", 500
+
+    try:
+        learners.delete_one({'_id': ObjectId(id)})
+    except Exception as e:
+        print(f"Error deleting course: {e}")
+        return "Error deleting course. Please try again.", 500
     return redirect('/dashboard')
 
 
 def get_youtube_playlist(course):
     api_key = os.getenv("YOUTUBE_API_KEY")
+    if not api_key:
+        print("YOUTUBE_API_KEY is not set in environment variables.")
+        return None
+
     query = f"{course} full course playlist"
     url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q={query}&type=playlist&key={api_key}"
 
-    response = requests.get(url)
-    data = response.json()
+    try:
+        response = requests.get(url)
+        response.raise_for_status() # Raise an exception for HTTP errors (4xx or 5xx)
+        data = response.json()
 
-    if 'items' in data and len(data['items']) > 0:
-        playlist_id = data['items'][0]['id']['playlistId']
-        return f"https://www.youtube.com/playlist?list={playlist_id}"
-    return None
+        if 'items' in data and len(data['items']) > 0:
+            playlist_id = data['items'][0]['id']['playlistId']
+            return f"https://www.youtube.com/playlist?list={playlist_id}"
+        print(f"No YouTube playlist found for query: {query}")
+        return None
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching YouTube playlist: {e}")
+        return None
+    except ValueError as e: # For JSON decoding errors
+        print(f"Error decoding YouTube API response: {e}")
+        print(f"Response content: {response.text}")
+        return None
 
 
 if __name__ == '__main__':
+    # Print the MONGO_URI to ensure it's being read during local testing
+    # In production environments like Render, avoid printing sensitive information
+    # print(f"MONGO_URI: {mongo_uri}")
+    # print(f"SECRET_KEY: {'Set' if app.secret_key else 'Not Set'}")
+    # print(f"YOUTUBE_API_KEY: {'Set' if os.getenv('YOUTUBE_API_KEY') else 'Not Set'}")
+
     app.run(host='0.0.0.0', port=5000, debug=True)
