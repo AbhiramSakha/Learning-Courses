@@ -15,12 +15,27 @@ app.secret_key = os.getenv("SECRET_KEY")
 
 # MongoDB Config
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")
+
+# Initialize PyMongo
 mongo = PyMongo(app)
 
-# Collections
-db = mongo.db
-users = db.users
-learners = db.learners
+# Collections - Access these *after* mongo has been initialized with the app
+# These should be accessed within a request context or after the app has fully set up,
+# or better yet, access them directly through mongo.db.collection_name
+# For global access, it's safer to define them within a function or access them dynamically.
+# However, if you want them as global variables, you need to ensure mongo.db is not None.
+
+# This block is moved to ensure mongo is initialized before db is accessed
+try:
+    db = mongo.db
+    users = db.users
+    learners = db.learners
+except Exception as e:
+    print(f"Error connecting to MongoDB or accessing collections: {e}")
+    # You might want to handle this more robustly, e.g., by exiting or showing an error page.
+    db = None # Ensure db is None if connection fails
+    users = None
+    learners = None
 
 
 @app.route('/')
@@ -30,6 +45,8 @@ def home():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if users is None: # Added check
+        return "Database not available.", 500
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -43,6 +60,8 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if users is None: # Added check
+        return "Database not available.", 500
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -65,6 +84,9 @@ def logout():
 def dashboard():
     if 'username' not in session:
         return redirect('/login')
+    
+    if learners is None: # Added check
+        return "Database not available.", 500
 
     if request.method == 'POST':
         course = request.form['course']
@@ -84,6 +106,8 @@ def dashboard():
 def delete_course(id):
     if 'username' not in session:
         return redirect('/login')
+    if learners is None: # Added check
+        return "Database not available.", 500
     learners.delete_one({'_id': ObjectId(id)})
     return redirect('/dashboard')
 
