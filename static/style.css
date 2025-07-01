@@ -7,18 +7,24 @@ body {
     background-size: cover;
     color: #fff;
     overflow-x: hidden;
+    display: flex; /* Added for vertical centering */
+    justify-content: center; /* Added for horizontal centering */
+    align-items: center; /* Added for vertical centering */
+    min-height: 100vh; /* Added to ensure body takes full height for centering */
 }
 
-/* Main Container */
+/* Main Container - MODIFIED FOR SMALLER, CENTERED BOX */
 .container {
-    max-width: 800px;
-    margin: 50px auto;
+    max-width: 400px; /* Reduced from 800px to make it a smaller box */
+    width: 90%; /* Ensure it's responsive on smaller screens */
+    margin: auto; /* Changed from fixed 50px auto to auto for perfect centering */
     padding: 30px;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(12px);
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     animation: slideIn 1s ease;
+    /* Removed margin-top/bottom as flexbox handles centering */
 }
 
 /* Headings */
@@ -33,17 +39,15 @@ h1, h2, h3 {
 form {
     display: flex;
     flex-direction: column;
-    /* Decreased gap between form elements */
-    gap: 10px; /* Changed from 15px to 10px */
-    margin-bottom: 25px;
+    gap: 10px; /* Keep gap small for compact design */
+    margin-bottom: 15px; /* Reduced from 25px */
     animation: fadeInUp 1.4s ease;
 }
 
 input[type="text"],
 input[type="email"],
 input[type="password"] {
-    /* Decreased vertical padding */
-    padding: 8px; /* Changed from 12px to 8px */
+    padding: 10px; /* Adjusted padding to be consistent and fit */
     border: none;
     border-radius: 8px;
     font-size: 16px;
@@ -54,8 +58,7 @@ input[type="password"] {
 
 /* Buttons */
 button {
-    /* Decreased vertical padding */
-    padding: 10px; /* Changed from 12px to 10px */
+    padding: 10px; /* Keep consistent with input padding */
     background-color: #0dcaf0;
     border: none;
     color: white;
@@ -71,7 +74,7 @@ button:hover {
     background-color: #0bb4da;
 }
 
-/* Course Ad Section */
+/* Course Ad Section - (Retained original as it's not for login/register) */
 .course-ads {
     display: flex;
     gap: 15px;
@@ -98,7 +101,7 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* List Section */
+/* List Section - (Retained original) */
 ul {
     list-style-type: none;
     padding: 0;
@@ -128,6 +131,7 @@ li a:hover {
     color: #ff6b6b;
     text-align: center;
     animation: shake 0.5s;
+    margin-bottom: 15px; /* Added margin for spacing */
 }
 
 /* Register Text */
@@ -135,7 +139,7 @@ li a:hover {
     text-align: center;
     font-size: 15px;
     color: #ccc;
-    margin-top: 20px;
+    margin-top: 15px; /* Reduced from 20px */
     animation: fadeInUp 1.8s ease;
 }
 
