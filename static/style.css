@@ -7,10 +7,46 @@ body {
     background-size: cover;
     color: #fff;
     overflow-x: hidden;
-    /* Removed flexbox centering for the *entire* body from previous iteration,
+    /* Removed flexbox centering from the *entire* body from previous iteration,
        as dashboard needs a different layout.
        Centering for login/register will be handled by specific containers. */
 }
+
+/* --- NEW: Top Advertising Section --- */
+/* This will target the .course-ads container when placed at the top of the body.
+   It will make it a row of ads, centered horizontally, at the top. */
+.course-ads-top { /* Using a new class to differentiate from old .course-ads placement */
+    display: flex;
+    justify-content: center; /* Center ads horizontally */
+    gap: 25px; /* Space between the ads */
+    margin: 30px auto 20px auto; /* Top, horizontal centering, bottom margin */
+    padding: 15px; /* Padding around the ads */
+    max-width: 90%; /* Ensure it's not too wide */
+    flex-wrap: wrap; /* Allow ads to wrap if screen is too small */
+    background: rgba(255, 255, 255, 0.05); /* Subtle background */
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: fadeIn 1.5s ease-out; /* A simple fade-in for these */
+}
+
+.course-ads-top .course-card {
+    text-align: center;
+}
+
+.course-ads-top img {
+    width: 220px; /* Adjust size of these top ads */
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+
+.course-ads-top img:hover {
+    transform: scale(1.08); /* Slightly more prominent hover */
+}
+/* --- END NEW: Top Advertising Section --- */
+
 
 /* Main Page Title */
 .main-page-title {
@@ -25,10 +61,9 @@ body {
 
 /* Main Container (for Login/Register pages) */
 .container {
-    max-width: 400px; /* Reduced from 800px to make it a smaller box */
-    width: 90%; /* Ensure it's responsive on smaller screens */
-    margin: 50px auto; /* Re-added margin for centering on login/register */
-    padding: 30px;
+    max-width: 400px; /* Reduced from 500px to make it smaller for login/register */
+    margin: 50px auto; /* Centered with auto margins for login/register */
+    padding: 30px; /* Increased from 25px to match original */
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(12px);
     border-radius: 15px;
@@ -48,15 +83,15 @@ h1, h2, h3 {
 form {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Keep gap small for compact design */
-    margin-bottom: 15px; /* Reduced from 25px */
+    gap: 15px; /* Reverted to 15px from 10px */
+    margin-bottom: 25px; /* Reverted to 25px from 15px */
     animation: fadeInUp 1.4s ease;
 }
 
 input[type="text"],
 input[type="email"],
 input[type="password"] {
-    padding: 10px; /* Adjusted padding to be consistent and fit */
+    padding: 12px; /* Reverted to 12px from 10px */
     border: none;
     border-radius: 8px;
     font-size: 16px;
@@ -67,7 +102,7 @@ input[type="password"] {
 
 /* Buttons */
 button {
-    padding: 10px; /* Keep consistent with input padding */
+    padding: 12px; /* Reverted to 12px from 10px */
     background-color: #0dcaf0;
     border: none;
     color: white;
@@ -83,27 +118,26 @@ button:hover {
     background-color: #0bb4da;
 }
 
-/* === NEW/MODIFIED LAYOUT FOR DASHBOARD CONTENT === */
+/* === MODIFIED DASHBOARD LAYOUT (keeping original structure concept) === */
 
-/* This needs a parent container in your HTML for your main dashboard content
-   (e.g., <div class="dashboard-content-wrapper">...</div>)
-   This wrapper will hold your course list, search box, and ad images. */
-.dashboard-content-wrapper {
-    display: flex; /* Use flexbox to arrange items side-by-side */
-    justify-content: space-between; /* Distribute space between items */
+/* The main container for your dashboard content (list, search, side ads) */
+/* This will now arrange the remaining content into columns */
+.dashboard-main-content {
+    display: flex; /* Enable Flexbox for layout */
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    justify-content: space-between; /* Distribute space horizontally */
     align-items: flex-start; /* Align items to the top */
-    max-width: 1200px; /* Adjust as needed for your dashboard width */
-    margin: 20px auto 50px auto; /* Center the wrapper horizontally */
+    max-width: 1200px; /* Overall width of your dashboard content area */
+    margin: 20px auto 50px auto; /* Center the entire dashboard content horizontally */
     padding: 20px;
     background: rgba(255, 255, 255, 0.08); /* Frosted glass background for the whole layout area */
     backdrop-filter: blur(12px);
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    flex-wrap: wrap; /* Allow content to wrap on smaller screens */
     gap: 20px; /* Space between the main layout sections */
 }
 
-/* Styles for the sections within the dashboard-content-wrapper */
+/* Styles for the sections within the dashboard-main-content */
 /* Assuming you have divs for left-content (course list), center-content (search), right-content (ads) */
 .left-content,
 .center-content,
@@ -119,6 +153,7 @@ button:hover {
 .left-content {
     flex: 1; /* Allows it to grow and shrink */
     min-width: 300px; /* Minimum width for the course list */
+    order: 1; /* Left column */
 }
 
 .center-content {
@@ -129,9 +164,10 @@ button:hover {
     justify-content: center; /* Center content vertically within its box */
     align-items: center; /* Center content horizontally within its box */
     text-align: center;
+    order: 2; /* Middle column */
 }
 
-.right-content {
+.right-content { /* This will be the new home for the ads *if you have them there* */
     flex: 0.8; /* Slightly smaller than left, gives more room to center */
     min-width: 280px; /* Minimum width for ads */
     display: flex;
@@ -139,10 +175,12 @@ button:hover {
     align-items: center; /* Center ads horizontally within this section */
     justify-content: flex-start; /* Align ads to the top */
     text-align: center;
+    order: 3; /* Right column */
 }
 
-/* Course Ad Section - (Adjusted for placement within right-content) */
-.course-ads {
+/* Course Ad Section - This is now for ads *inside* the right-content, if any remain */
+/* The top-of-page ads are handled by .course-ads-top */
+.course-ads { /* This targets .course-ads *if* it's still used for sidebar ads */
     display: flex;
     flex-direction: column; /* Stack ads vertically on the right */
     gap: 15px;
@@ -152,10 +190,11 @@ button:hover {
     animation: zoomIn 1.8s ease;
 }
 
-.course-card {
+.course-card { /* Applies to cards in both .course-ads-top and .course-ads */
     text-align: center;
 }
 
+/* Images within the OLD .course-ads (e.g., if you have sidebar ads remaining) */
 .course-ads img {
     width: 200px; /* Slightly smaller ads to fit right side */
     height: 120px; /* Adjusted height */
@@ -170,7 +209,7 @@ button:hover {
 }
 
 /* List Section (Applies to the ul for courses) */
-ul {
+ul { /* This targets any <ul> element. If you have multiple, you might need a more specific class */
     list-style-type: none;
     padding: 0;
     animation: fadeInUp 1.8s ease;
@@ -211,7 +250,7 @@ li a:hover {
     text-align: center;
     font-size: 15px;
     color: #ccc;
-    margin-top: 15px;
+    margin-top: 20px; /* Reverted to 20px */
     animation: fadeInUp 1.8s ease;
 }
 
@@ -266,6 +305,11 @@ li a:hover {
     0% { transform: scale(0.8); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
 }
+/* Added a general fade-in for top ads */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
 
 @keyframes shake {
     0% { transform: translateX(0); }
@@ -277,24 +321,32 @@ li a:hover {
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
-    .dashboard-content-wrapper { /* Changed from .dashboard-wrapper */
+    .dashboard-main-content {
         flex-direction: column; /* Stack columns on smaller screens */
         align-items: center;
     }
 
-    .left-content,
-    .center-content,
-    .right-content {
+    .dashboard-main-content > * { /* Target all direct children of dashboard-main-content */
         width: 90%; /* Take full width on small screens */
         margin-bottom: 20px; /* Add space between stacked sections */
         min-width: unset; /* Remove min-width constraints */
+        order: unset !important; /* Reset order on small screens */
     }
 
     .main-page-title {
         font-size: 2.5em; /* Smaller title on small screens */
     }
 
-    .course-ads {
+    .course-ads-top { /* Ensure top ads still stack correctly */
+        flex-direction: column;
+        gap: 15px;
+    }
+    .course-ads-top img {
+        width: 180px; /* Adjust size for smaller screens */
+        height: 100px;
+    }
+
+    .course-ads { /* If side ads are still present */
         flex-direction: row; /* Ads can be side-by-side on smaller screens */
         flex-wrap: wrap;
         justify-content: center;
