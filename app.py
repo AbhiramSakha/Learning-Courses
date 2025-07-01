@@ -17,9 +17,15 @@ app.secret_key = os.getenv("SECRET_KEY")
 mongo_uri = os.getenv("MONGO_URI")
 app.config["MONGO_URI"] = mongo_uri
 
-# --- ADDED: Debugging print for MONGO_URI ---
+# --- CRITICAL FIX: Explicitly set the MongoDB database name ---
+# Even with readWriteAnyDatabase, Flask-PyMongo needs to know which DB
+# to attach to mongo.db if not specified in the URI path.
+app.config["MONGO_DBNAME"] = "learning_courses_db"  # You can choose any name you like here
+# --- END CRITICAL FIX ---
+
+# --- DEBUGGING AID: Print the MONGO_URI to confirm it's loaded ---
 print(f"DEBUG: MONGO_URI from os.getenv() is: {mongo_uri}")
-# --- END ADDED ---
+# --- END DEBUGGING AID ---
 
 # Initialize PyMongo
 mongo = PyMongo(app)
@@ -29,25 +35,27 @@ db = None
 users = None
 learners = None
 
-# --- MODIFIED: Enhanced MongoDB connection attempt and error handling ---
+# --- ENHANCED ERROR HANDLING FOR DATABASE CONNECTION ---
 try:
-    # Attempt to get the underlying MongoClient and ping the database
-    # This line will raise an exception if the connection fails (e.g., auth, network)
+    # Attempt to ping the database to confirm a successful underlying connection.
+    # This will raise an exception if there's an issue with auth or network.
     mongo.cx.admin.command('ping')
     print("DEBUG: PyMongo client successfully pinged the MongoDB deployment!")
 
-    # If ping succeeds, then it's safe to access .db and its collections
+    # If ping succeeds, then it's safe to access .db and its collections.
+    # With MONGO_DBNAME set, mongo.db should now correctly point to your chosen database.
     db = mongo.db
     users = db.users
     learners = db.learners
     print("MongoDB collections (users, learners) initialized successfully.")
 
 except Exception as e:
+    # This block will now catch more specific PyMongo errors if they occur during ping.
     print(f"ERROR: Failed to connect to MongoDB or access collections: {e}")
     print("Please ensure MONGO_URI is set correctly, MongoDB is accessible (IP whitelist/firewall), and credentials are valid.")
-    # db, users, learners will remain None, triggering the 500 errors in routes
-
-# --- END MODIFIED ---
+    # If connection fails, db, users, and learners will remain None,
+    # and routes will return a 500 error, indicating database unavailability.
+# --- END ENHANCED ERROR HANDLING ---
 
 
 @app.route('/')
@@ -57,7 +65,7 @@ def home():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    # Check if the 'users' collection is available (i.e., DB connection was successful)
+    # Check if the 'users' collection is available before proceeding
     if users is None:
         return "Database not available. Please check server logs for connection errors.", 500
 
@@ -74,7 +82,7 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Check if the 'users' collection is available
+    # Check if the 'users' collection is available before proceeding
     if users is None:
         return "Database not available. Please check server logs for connection errors.", 500
 
@@ -101,7 +109,7 @@ def dashboard():
     if 'username' not in session:
         return redirect('/login')
 
-    # Check if the 'learners' collection is available
+    # Check if the 'learners' collection is available before proceeding
     if learners is None:
         return "Database not available. Please check server logs for connection errors.", 500
 
@@ -124,7 +132,7 @@ def delete_course(id):
     if 'username' not in session:
         return redirect('/login')
 
-    # Check if the 'learners' collection is available
+    # Check if the 'learners' collection is available before proceeding
     if learners is None:
         return "Database not available. Please check server logs for connection errors.", 500
 
