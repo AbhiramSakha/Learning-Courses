@@ -7,30 +7,27 @@ body {
     background-size: cover;
     color: #fff;
     overflow-x: hidden;
-    display: flex; /* Added for vertical centering */
-    flex-direction: column; /* Changed to column to stack title and container */
-    justify-content: center; /* Added for vertical centering */
-    align-items: center; /* Added for horizontal centering */
-    min-height: 100vh; /* Added to ensure body takes full height for centering */
-    gap: 20px; /* Added gap between title and container */
+    /* Removed flexbox centering for the *entire* body,
+       as dashboard needs a different layout.
+       Centering for login/register will be handled by specific containers. */
 }
 
-/* Main Page Title - NEW STYLE */
+/* Main Page Title */
 .main-page-title {
     color: #0dcaf0; /* Bright blue color */
     font-size: 3.5em; /* Larger font size */
     text-align: center;
-    margin-bottom: 0; /* Remove default margin-bottom as gap handles spacing */
+    margin: 40px auto 20px auto; /* Centered with top/bottom margin */
     text-shadow: 0 0 15px rgba(13, 202, 240, 0.7); /* Subtle glow effect */
     animation: fadeInDown 1s ease-out; /* Animation */
-    padding-top: 20px; /* Add some padding from the very top of the page */
+    width: 100%; /* Ensure it spans full width for centering */
 }
 
-/* Main Container - MODIFIED FOR SMALLER, CENTERED BOX */
+/* Login/Register Container (Kept for specific pages) */
 .container {
-    max-width: 400px; /* Reduced from 800px to make it a smaller box */
-    width: 90%; /* Ensure it's responsive on smaller screens */
-    margin: 0; /* Changed margin to 0 as flexbox gap handles spacing */
+    max-width: 400px;
+    width: 90%;
+    margin: 50px auto; /* Re-added margin for centering on login/register */
     padding: 30px;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(12px);
@@ -39,7 +36,58 @@ body {
     animation: slideIn 1s ease;
 }
 
-/* Headings */
+/* Dashboard Wrapper - NEW LAYOUT FOR THE DASHBOARD */
+.dashboard-wrapper {
+    display: flex; /* Use flexbox for main layout */
+    justify-content: space-between; /* Distribute space */
+    align-items: flex-start; /* Align items to the top */
+    max-width: 1200px; /* Wider container for the dashboard content */
+    margin: 20px auto 50px auto; /* Centered with margins */
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 20px; /* Gap between sections */
+}
+
+.left-section,
+.center-section,
+.right-section {
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05); /* Slightly darker background for sections */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    min-height: 250px; /* Minimum height for visual balance */
+}
+
+.left-section {
+    flex: 1; /* Allows it to grow and shrink */
+    min-width: 280px; /* Minimum width for the course list */
+}
+
+.center-section {
+    flex: 2; /* Takes more space, pushing others to the sides */
+    min-width: 350px; /* Minimum width for the search box */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    text-align: center; /* Center text within the section */
+}
+
+.right-section {
+    flex: 1; /* Allows it to grow and shrink */
+    min-width: 250px; /* Minimum width for ads */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center ads vertically */
+    justify-content: flex-start; /* Align ads to the top */
+    text-align: center;
+}
+
+/* Headings (apply to all h1, h2, h3) */
 h1, h2, h3 {
     color: #0dcaf0;
     text-align: center;
@@ -51,15 +99,17 @@ h1, h2, h3 {
 form {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Keep gap small for compact design */
-    margin-bottom: 15px; /* Reduced from 25px */
+    gap: 10px;
+    margin-bottom: 15px;
     animation: fadeInUp 1.4s ease;
+    width: 100%; /* Ensure form takes full width of its container */
+    max-width: 350px; /* Limit form width within center section */
 }
 
 input[type="text"],
 input[type="email"],
 input[type="password"] {
-    padding: 10px; /* Adjusted padding to be consistent and fit */
+    padding: 10px;
     border: none;
     border-radius: 8px;
     font-size: 16px;
@@ -70,7 +120,7 @@ input[type="password"] {
 
 /* Buttons */
 button {
-    padding: 10px; /* Keep consistent with input padding */
+    padding: 10px;
     background-color: #0dcaf0;
     border: none;
     color: white;
@@ -86,13 +136,14 @@ button:hover {
     background-color: #0bb4da;
 }
 
-/* Course Ad Section - (Retained original as it's not for login/register) */
+/* Course Ad Section (now specifically for ads within right-section) */
 .course-ads {
     display: flex;
+    flex-direction: column; /* Stack ads vertically on the right */
     gap: 15px;
     justify-content: center;
-    margin: 30px auto 0;
-    flex-wrap: wrap;
+    margin: 15px auto 0; /* Adjusted margin */
+    flex-wrap: nowrap; /* Prevent wrapping in this flex container */
     animation: zoomIn 1.8s ease;
 }
 
@@ -101,8 +152,8 @@ button:hover {
 }
 
 .course-ads img {
-    width: 250px;
-    height: 150px;
+    width: 200px; /* Slightly smaller ads to fit right side */
+    height: 120px; /* Adjusted height */
     object-fit: cover;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.4);
@@ -113,7 +164,7 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* List Section - (Retained original) */
+/* List Section */
 ul {
     list-style-type: none;
     padding: 0;
@@ -125,6 +176,10 @@ li {
     background: rgba(255,255,255,0.1);
     padding: 10px;
     border-radius: 6px;
+    display: flex; /* For better layout of list items */
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allow list items to wrap */
 }
 
 li a {
@@ -143,15 +198,15 @@ li a:hover {
     color: #ff6b6b;
     text-align: center;
     animation: shake 0.5s;
-    margin-bottom: 15px; /* Added margin for spacing */
+    margin-bottom: 15px;
 }
 
-/* Register Text */
+/* Register Text (for login/register pages) */
 .register-text {
     text-align: center;
     font-size: 15px;
     color: #ccc;
-    margin-top: 15px; /* Reduced from 20px */
+    margin-top: 15px;
     animation: fadeInUp 1.8s ease;
 }
 
@@ -166,6 +221,25 @@ li a:hover {
     color: #09a3c7;
     text-decoration: underline;
 }
+
+/* Logout Button Styling (Assuming you add a class="logout-button" to your logout link) */
+.logout-button {
+    display: block; /* Make it a block element to control width and margin */
+    width: fit-content; /* Adjust width to content */
+    margin: 20px auto; /* Center it below the dashboard wrapper */
+    padding: 10px 20px;
+    background-color: #f44336; /* Red color for logout */
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+}
+
 
 /* Animations */
 @keyframes slideIn {
@@ -194,4 +268,30 @@ li a:hover {
     50% { transform: translateX(5px); }
     75% { transform: translateX(-5px); }
     100% { transform: translateX(0); }
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .dashboard-wrapper {
+        flex-direction: column; /* Stack columns on smaller screens */
+        align-items: center;
+    }
+
+    .left-section,
+    .center-section,
+    .right-section {
+        width: 90%; /* Take full width on small screens */
+        margin-bottom: 20px; /* Add space between stacked sections */
+        min-width: unset; /* Remove min-width constraints */
+    }
+
+    .main-page-title {
+        font-size: 2.5em; /* Smaller title on small screens */
+    }
+
+    .course-ads {
+        flex-direction: row; /* Ads can be side-by-side on smaller screens */
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
