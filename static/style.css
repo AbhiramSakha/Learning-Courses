@@ -7,13 +7,9 @@ body {
     background-size: cover;
     color: #fff;
     overflow-x: hidden;
-    /* This flexbox centering below is appropriate for single-page layouts like login/register.
-       For the dashboard, the .dashboard-main-content handles its own layout. */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    justify-content: center;
+    /* Removed specific flexbox centering from body.
+       Dashboard layout (via .dashboard-main-content) will handle its own centering.
+       Login/Register pages will use their .container for centering. */
 }
 
 /* Main Page Title */
@@ -27,12 +23,12 @@ body {
     width: 100%; /* Ensure it spans full width for centering */
 }
 
-/* Main Container (for Login/Register pages, as seen in image_9112fc.jpg) */
+/* Main Container (for Login/Register pages, as seen in image_9112fc.jpg, image_911a22.jpg) */
 .container {
-    max-width: 400px; /* Reduced from 500px to make it a smaller box */
-    width: 90%; /* Ensure it's responsive on smaller screens */
-    margin: 50px auto; /* Re-added margin for centering on login/register */
-    padding: 30px;
+    max-width: 400px; /* Make it a smaller, compact box */
+    width: 90%; /* Responsive width */
+    margin: 50px auto; /* Centered for login/register pages */
+    padding: 30px; /* Generous padding inside the box */
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(12px);
     border-radius: 15px;
@@ -45,7 +41,6 @@ body {
     justify-content: center; /* Vertically center if only container and title */
 }
 
-
 /* Headings */
 h1, h2, h3 {
     color: #0dcaf0;
@@ -54,7 +49,7 @@ h1, h2, h3 {
     animation: fadeInDown 1.2s ease;
 }
 
-/* Forms */
+/* Forms (Login/Register Forms within .container, or the search form on dashboard) */
 form {
     display: flex;
     flex-direction: column;
@@ -95,7 +90,7 @@ button:hover {
     background-color: #0bb4da;
 }
 
-/* --- Top Advertising Section (The one you wanted at the very top, in a row) --- */
+/* --- Top Advertising Section (Python, Power BI, MERN Stack ads from image_908efa.jpg, now at top) --- */
 .course-ads-top {
     display: flex;
     flex-direction: row; /* Keep them in a row at the top */
@@ -129,24 +124,111 @@ button:hover {
 }
 
 
-/* --- MODIFIED: Course Ad Section (This targets the ads in image_908efa.jpg to be in a row) --- */
-.course-ads { /* This is the section containing the Python, Power BI, MERN Stack images */
+/* --- Dashboard Layout (Main content wrapper for course list, search, and "bottom" ads) --- */
+.dashboard-main-content {
+    display: flex; /* Enable Flexbox for layout */
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    justify-content: space-between; /* Distribute space horizontally */
+    align-items: flex-start; /* Align items to the top */
+    max-width: 1200px; /* Overall width of your dashboard content area */
+    margin: 20px auto 50px auto; /* Center the entire dashboard content horizontally */
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.08); /* Frosted glass background for the whole layout area */
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    gap: 20px; /* Space between the main layout sections */
+}
+
+/* Styles for the sections within the dashboard-main-content */
+.left-content, /* For your course list */
+.center-content, /* For your search box */
+.right-content { /* For the "bottom advertising images" (Web Dev, R, Anaconda) */
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05); /* Slightly distinct background for individual sections */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    min-height: 250px; /* For visual balance, adjust as needed */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.left-content {
+    flex: 1; /* Allows it to grow and shrink */
+    min-width: 300px; /* Minimum width for the course list */
+    order: 1; /* Place it first (left) */
+}
+
+.center-content {
+    flex: 2; /* Takes up more space for the search box */
+    min-width: 400px; /* Minimum width for the search box to be prominent */
     display: flex;
-    flex-direction: row; /* CHANGED: Display ads in a row */
+    flex-direction: column;
+    justify-content: center; /* Center content vertically within its box */
+    align-items: center; /* Center content horizontally within its box */
+    text-align: center;
+    order: 2; /* Place it second (middle) */
+}
+
+.right-content { /* This will now explicitly hold the "bottom advertising images" */
+    flex: 0.8; /* Slightly smaller flex-grow to give more room to center */
+    min-width: 280px; /* Minimum width for the ads */
+    display: flex;
+    flex-direction: column; /* Stack ads vertically within this right column */
+    align-items: center; /* Center ads horizontally within this section */
+    justify-content: flex-start; /* Align ads to the top */
+    text-align: center;
+    order: 3; /* Place it third (right) */
+    gap: 15px; /* Space between ads within this section */
+}
+
+/* --- Specific styling for the "bottom" advertising images (Web Dev, R, Anaconda) --- */
+/* Assuming these images are wrapped in a div with class "bottom-ads"
+   and that "bottom-ads" is placed inside `.right-content`.
+   If you still have a `.course-ads` class for these images, we will repurpose it. */
+.bottom-ads { /* Using a new class for clarity for these specific ads */
+    display: flex;
+    flex-direction: column; /* Stack them vertically in the right sidebar */
+    gap: 20px; /* Space between these ads */
+    justify-content: flex-start; /* Align to the top of the right column */
+    width: 100%; /* Take full width of parent (.right-content) */
+    align-items: center; /* Center ads if they don't fill width */
+}
+
+.bottom-ads .course-card { /* Assuming each ad is in a .course-card div */
+    text-align: center;
+    width: 100%; /* Take full width of .bottom-ads */
+}
+
+.bottom-ads img {
+    width: 200px; /* Adjusted size to fit well in the right sidebar */
+    height: 120px; /* Adjusted height */
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    transition: transform 0.4s ease;
+}
+
+.bottom-ads img:hover {
+    transform: scale(1.05);
+}
+
+/* Original .course-ads if it's still used somewhere else for a different set of ads */
+/* If you no longer have ads that fit the 'course-ads' style outside of .course-ads-top
+   and .bottom-ads, you can remove this block. */
+.course-ads {
+    display: flex;
+    flex-direction: row; /* Default for this specific class if used */
     gap: 15px;
-    justify-content: center; /* Center them horizontally */
-    margin: 30px auto 0; /* Keep the existing margin for centering */
-    flex-wrap: wrap; /* Allow them to wrap on smaller screens if needed */
+    justify-content: center;
+    margin: 30px auto 0;
+    flex-wrap: wrap;
     animation: zoomIn 1.8s ease;
 }
 
-.course-card {
-    text-align: center;
-}
-
+/* Ensure images within this .course-ads (if still used) are also styled */
 .course-ads img {
-    width: 250px; /* Keep existing width from your first block */
-    height: 150px; /* Keep existing height from your first block */
+    width: 250px;
+    height: 150px;
     object-fit: cover;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.4);
@@ -157,7 +239,8 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* List Section */
+
+/* List Section (Applies to the ul for courses) */
 ul {
     list-style-type: none;
     padding: 0;
@@ -169,6 +252,10 @@ li {
     background: rgba(255,255,255,0.1);
     padding: 10px;
     border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 li a {
@@ -187,6 +274,7 @@ li a:hover {
     color: #ff6b6b;
     text-align: center;
     animation: shake 0.5s;
+    margin-bottom: 15px;
 }
 
 /* Register Text */
@@ -210,6 +298,24 @@ li a:hover {
     text-decoration: underline;
 }
 
+/* Logout Button Styling */
+.logout-button {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+}
+
 /* Animations */
 @keyframes slideIn {
     0% { transform: translateY(50px); opacity: 0; }
@@ -231,6 +337,11 @@ li a:hover {
     100% { transform: scale(1); opacity: 1; }
 }
 
+@keyframes fadeIn { /* For the top ads */
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 @keyframes shake {
     0% { transform: translateX(0); }
     25% { transform: translateX(-5px); }
@@ -239,16 +350,9 @@ li a:hover {
     100% { transform: translateX(0); }
 }
 
-/* Added a general fade-in for top ads */
-@keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
-    /* If you have a .dashboard-main-content wrapper, it should still stack columns */
+    /* Main dashboard content stacks columns */
     .dashboard-main-content {
         flex-direction: column;
         align-items: center;
@@ -258,15 +362,16 @@ li a:hover {
         width: 90%;
         margin-bottom: 20px;
         min-width: unset;
-        order: unset !important;
+        order: unset !important; /* Reset order on small screens for stacking */
     }
 
     .main-page-title {
         font-size: 2.5em;
     }
 
+    /* Top ads can stack vertically on small screens */
     .course-ads-top {
-        flex-direction: column; /* Stack top ads vertically on small screens */
+        flex-direction: column;
         gap: 15px;
     }
     .course-ads-top img {
@@ -274,12 +379,18 @@ li a:hover {
         height: 100px;
     }
 
-    .course-ads { /* MODIFIED: On small screens, the main dashboard ads will also stack vertically */
-        flex-direction: column; /* Changed to column for small screens */
+    /* The "bottom advertising images" (Web Dev, R, Anaconda) will stack vertically on small screens */
+    .bottom-ads { /* Targets the new class for these specific ads */
+        flex-direction: column;
         justify-content: center;
     }
-    .course-ads img { /* Adjust size for small screens */
+    .bottom-ads img { /* Adjust size for small screens */
         width: 180px;
         height: 100px;
+    }
+
+    /* If .course-ads is still used, it will also stack */
+    .course-ads {
+        flex-direction: column;
     }
 }
