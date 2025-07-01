@@ -5,19 +5,19 @@ from dotenv import load_dotenv
 import requests
 from bson.objectid import ObjectId
 
-# Load environment variables
+# Load environment variables from .env
 load_dotenv()
 
 app = Flask(__name__)
+
+# Set secret key strictly from environment variable (no fallback)
 app.secret_key = os.getenv("SECRET_KEY")
 
-# ✅ Set Mongo URI before creating PyMongo
-app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
-
-# ✅ Initialize PyMongo AFTER setting config
+# MongoDB Config
+app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 mongo = PyMongo(app)
 
-# Access DB and collections
+# Collections
 db = mongo.db
 users = db.users
 learners = db.learners
@@ -103,4 +103,4 @@ def get_youtube_playlist(course):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
