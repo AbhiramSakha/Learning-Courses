@@ -8,23 +8,35 @@ body {
     color: #fff;
     overflow-x: hidden;
     display: flex; /* Added for vertical centering */
-    justify-content: center; /* Added for horizontal centering */
-    align-items: center; /* Added for vertical centering */
+    flex-direction: column; /* Changed to column to stack title and container */
+    justify-content: center; /* Added for vertical centering */
+    align-items: center; /* Added for horizontal centering */
     min-height: 100vh; /* Added to ensure body takes full height for centering */
+    gap: 20px; /* Added gap between title and container */
+}
+
+/* Main Page Title - NEW STYLE */
+.main-page-title {
+    color: #0dcaf0; /* Bright blue color */
+    font-size: 3.5em; /* Larger font size */
+    text-align: center;
+    margin-bottom: 0; /* Remove default margin-bottom as gap handles spacing */
+    text-shadow: 0 0 15px rgba(13, 202, 240, 0.7); /* Subtle glow effect */
+    animation: fadeInDown 1s ease-out; /* Animation */
+    padding-top: 20px; /* Add some padding from the very top of the page */
 }
 
 /* Main Container - MODIFIED FOR SMALLER, CENTERED BOX */
 .container {
     max-width: 400px; /* Reduced from 800px to make it a smaller box */
     width: 90%; /* Ensure it's responsive on smaller screens */
-    margin: auto; /* Changed from fixed 50px auto to auto for perfect centering */
+    margin: 0; /* Changed margin to 0 as flexbox gap handles spacing */
     padding: 30px;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(12px);
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     animation: slideIn 1s ease;
-    /* Removed margin-top/bottom as flexbox handles centering */
 }
 
 /* Headings */
