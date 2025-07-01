@@ -10,24 +10,22 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Set secret key strictly from environment variable (no fallback)
 app.secret_key = os.getenv("SECRET_KEY")
 
 # MongoDB Config
-# Get MONGO_URI from environment variables
 mongo_uri = os.getenv("MONGO_URI")
 app.config["MONGO_URI"] = mongo_uri
 
-# Initialize PyMongo
+# --- ADD THIS PRINT STATEMENT ---
+print(f"DEBUG: MONGO_URI from os.getenv() is: {mongo_uri}")
+# --- END ADDITION ---
+
 mongo = PyMongo(app)
 
-# Initialize db and collections to None initially
 db = None
 users = None
 learners = None
 
-# Attempt to connect to MongoDB and get collections
-# This block runs when the application starts
 try:
     db = mongo.db
     users = db.users
@@ -36,7 +34,8 @@ try:
 except Exception as e:
     print(f"Error connecting to MongoDB or accessing collections: {e}")
     print("Please ensure MONGO_URI is set correctly and MongoDB is accessible.")
-    # If connection fails, db, users, and learners will remain None,
+
+# ... rest of your code
     # and routes will return a 500 error, indicating database unavailability.
 
 
