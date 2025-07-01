@@ -10,33 +10,44 @@ load_dotenv()
 
 app = Flask(__name__)
 
+# Set secret key strictly from environment variable (no fallback)
 app.secret_key = os.getenv("SECRET_KEY")
 
 # MongoDB Config
 mongo_uri = os.getenv("MONGO_URI")
 app.config["MONGO_URI"] = mongo_uri
 
-# --- ADD THIS PRINT STATEMENT ---
+# --- ADDED: Debugging print for MONGO_URI ---
 print(f"DEBUG: MONGO_URI from os.getenv() is: {mongo_uri}")
-# --- END ADDITION ---
+# --- END ADDED ---
 
+# Initialize PyMongo
 mongo = PyMongo(app)
 
+# Initialize db and collections to None initially
 db = None
 users = None
 learners = None
 
+# --- MODIFIED: Enhanced MongoDB connection attempt and error handling ---
 try:
+    # Attempt to get the underlying MongoClient and ping the database
+    # This line will raise an exception if the connection fails (e.g., auth, network)
+    mongo.cx.admin.command('ping')
+    print("DEBUG: PyMongo client successfully pinged the MongoDB deployment!")
+
+    # If ping succeeds, then it's safe to access .db and its collections
     db = mongo.db
     users = db.users
     learners = db.learners
     print("MongoDB collections (users, learners) initialized successfully.")
-except Exception as e:
-    print(f"Error connecting to MongoDB or accessing collections: {e}")
-    print("Please ensure MONGO_URI is set correctly and MongoDB is accessible.")
 
-# ... rest of your code
-    # and routes will return a 500 error, indicating database unavailability.
+except Exception as e:
+    print(f"ERROR: Failed to connect to MongoDB or access collections: {e}")
+    print("Please ensure MONGO_URI is set correctly, MongoDB is accessible (IP whitelist/firewall), and credentials are valid.")
+    # db, users, learners will remain None, triggering the 500 errors in routes
+
+# --- END MODIFIED ---
 
 
 @app.route('/')
@@ -154,10 +165,4 @@ def get_youtube_playlist(course):
 
 
 if __name__ == '__main__':
-    # Print the MONGO_URI to ensure it's being read during local testing
-    # In production environments like Render, avoid printing sensitive information
-    # print(f"MONGO_URI: {mongo_uri}")
-    # print(f"SECRET_KEY: {'Set' if app.secret_key else 'Not Set'}")
-    # print(f"YOUTUBE_API_KEY: {'Set' if os.getenv('YOUTUBE_API_KEY') else 'Not Set'}")
-
     app.run(host='0.0.0.0', port=5000, debug=True)
